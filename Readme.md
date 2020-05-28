@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юрий Лемеш](https://up.htmlacademy.ru/javascript/20/user/968211).
-* Наставник: `Неизвестно`.
+* Наставник: [Руфат Хасларов](https://htmlacademy.ru/profile/id372587).
 
 ---
 
