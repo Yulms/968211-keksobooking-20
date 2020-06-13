@@ -43,9 +43,10 @@ var getRandomArray = function (arr) {
       resultArray.push(arr[i]);
     }
   }
-  if (arr.length > 0) {
-    return resultArray;
+  if (resultArray.length === 0) {
+    resultArray = null;
   }
+  return resultArray;
 };
 
 
