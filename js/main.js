@@ -57,21 +57,6 @@ var getAvatarLink = function (i) {
   return 'img/avatars/user' + avatarNumber + '.png';
 };
 
-var getSimilarOfferProto = {
-  getFullPrice: function () {
-    return this.price + PRICE_UNIT;
-  },
-  getTypeInRussian: function () {
-    return offerTypesInRussian[this.type];
-  },
-  getCapacity: function () {
-    return this.rooms + ' комнаты для ' + this.guests + ' гостей';
-  },
-  getTime: function () {
-    return 'Заезд после ' + this.checkin + ', выезд до ' + this.checkout + '.';
-  }
-};
-
 var getSimilarOffer = function (i) {
   var locationX = getRandomInteger(0, MAP_WIDTH);
   var locationY = getRandomInteger(130, 630);
@@ -81,7 +66,6 @@ var getSimilarOffer = function (i) {
       avatar: getAvatarLink(i)
     },
     offer: {
-      __proto__: getSimilarOfferProto,
       title: 'Уютное гнездышко',
       address: locationX + ', ' + locationY,
       price: 42000,
@@ -131,7 +115,7 @@ var getSimilarOfferPinsFragment = function (similarOffers) {
 var addOfferCardFeatures = function (offerCard, features) {
   var offerFeaturesList = offerCard.querySelector('.popup__features');
   offerFeaturesList.innerHTML = '';
-  if (features.length > 0) {
+  if (Array.isArray(features) && features.length > 0) {
     for (var i = 0; i < features.length; i++) {
       var featureModClassName = 'popup__feature--' + features[i];
       var newFeatureListItem = document.createElement('li');
@@ -145,7 +129,7 @@ var addOfferCardFeatures = function (offerCard, features) {
 };
 
 var addOfferCardThumbnails = function (offerCard, imageSources) {
-  if (imageSources) {
+  if (Array.isArray(imageSources) && imageSources.length > 0) {
     var offerPhoto = offerCard.querySelector('.popup__photo');
 
     for (var i = 0; i < imageSources.length; i++) {
@@ -169,15 +153,23 @@ var addContentOrRemove = function (parentElement, childSelector, property, conte
   }
 };
 
+var getCapacity = function (similarOffer) {
+  return similarOffer.offer.rooms + ' комнаты для ' + similarOffer.offer.guests + ' гостей';
+};
+
+var getTime = function (similarOffer) {
+  return 'Заезд после ' + similarOffer.offer.checkin + ', выезд до ' + similarOffer.offer.checkout + '.';
+};
+
 var createOfferCard = function (similarOffers) {
   var offerCard = cardTemplate.cloneNode(true);
 
   addContentOrRemove(offerCard, '.popup__title', 'textContent', similarOffers[0].offer.title);
   addContentOrRemove(offerCard, '.popup__text--address', 'textContent', similarOffers[0].offer.address);
-  addContentOrRemove(offerCard, '.popup__text--price', 'textContent', similarOffers[0].offer.getFullPrice());
-  addContentOrRemove(offerCard, '.popup__type', 'textContent', similarOffers[0].offer.getTypeInRussian());
-  addContentOrRemove(offerCard, '.popup__text--capacity', 'textContent', similarOffers[0].offer.getCapacity());
-  addContentOrRemove(offerCard, '.popup__text--time', 'textContent', similarOffers[0].offer.getTime());
+  addContentOrRemove(offerCard, '.popup__text--price', 'textContent', similarOffers[0].offer.price + PRICE_UNIT);
+  addContentOrRemove(offerCard, '.popup__type', 'textContent', offerTypesInRussian[similarOffers[0].offer.type]);
+  addContentOrRemove(offerCard, '.popup__text--capacity', 'textContent', getCapacity(similarOffers[0]));
+  addContentOrRemove(offerCard, '.popup__text--time', 'textContent', getTime(similarOffers[0]));
   addContentOrRemove(offerCard, '.popup__description', 'textContent', similarOffers[0].offer.description);
   addContentOrRemove(offerCard, '.popup__avatar', 'src', similarOffers[0].author.avatar);
   addOfferCardFeatures(offerCard, similarOffers[0].offer.features);
