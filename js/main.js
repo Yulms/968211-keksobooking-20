@@ -295,8 +295,8 @@ var activatePage = function () {
   fillAdressInput(getElementLocation(mapPinMainElement, true));
 
   // метод отрисовки карточки можно закомментировать до тех пор, пока вы не доберётесь до 2-й части задания, чтобы eslint не ругался
-  // var offerCard = createOfferCard(similarOffers);
-  // cardDestinationElement.before(offerCard);
+  var offerCard = createOfferCard(similarOffers);
+  cardDestinationElement.before(offerCard);
 };
 
 var deactivatePage = function () {
