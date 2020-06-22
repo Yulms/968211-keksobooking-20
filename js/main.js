@@ -23,6 +23,51 @@ var offerTypesMinPrices = {
   house: 5000,
   bungalo: 0
 };
+var OFFER_TYPES = [
+  {
+    type: 'palace',
+    typeInRussian: 'Дворец',
+    minPrice: 10000
+  },
+  {
+    type: 'flat',
+    typeInRussian: 'Квартира',
+    minPrice: 1000
+  },
+  {
+    type: 'house',
+    typeInRussian: 'Дом',
+    minPrice: 5000
+  },
+  {
+    type: 'bungalo',
+    typeInRussian: 'Бунгало',
+    minPrice: 0
+  },
+];
+var ROOMS = [
+  {
+    quantity: 1,
+    minGuests: 1,
+    maxGuests: 1,
+    wrongCapacityMessage: '1 комната — «для 1 гостя»'
+  }, {
+    quantity: 2,
+    minGuests: 1,
+    maxGuests: 2,
+    wrongCapacityMessage: '2 комнаты — «для 2 гостей» или «для 1 гостя»'
+  }, {
+    quantity: 3,
+    minGuests: 1,
+    maxGuests: 3,
+    wrongCapacityMessage: '3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»'
+  }, {
+    quantity: 100,
+    minGuests: 0,
+    maxGuests: 0,
+    wrongCapacityMessage: '100 комнат — «не для гостей»'
+  }
+];
 
 var mapElement = document.querySelector('.map');
 var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -224,14 +269,14 @@ var fillAdressInput = function (location) {
 };
 
 var validateRoomToCapacity = function (selectedRooms, selectedCapacity) {
-  if (selectedRooms === 100 && selectedCapacity !== 0) {
-    roomCapacityElement.setCustomValidity('100 комнат не рассчитано на прием гостей');
-  } else if (selectedCapacity === 0 && selectedRooms !== 100) {
-    roomCapacityElement.setCustomValidity('Не для гостей может быть только 100 комнат');
-  } else if (selectedCapacity > selectedRooms) {
-    roomCapacityElement.setCustomValidity('Гостей не может быть больше комнат');
-  } else {
-    roomCapacityElement.setCustomValidity('');
+  roomCapacityElement.setCustomValidity('');
+  for (var i = 0; i < ROOMS.length; i++) {
+    if (ROOMS[i].quantity === selectedRooms) {
+      if (selectedCapacity < ROOMS[i].minGuests || selectedCapacity > ROOMS[i].maxGuests) {
+        roomCapacityElement.setCustomValidity(ROOMS[i].wrongCapacityMessage);
+        break;
+      }
+    }
   }
   roomCapacityElement.reportValidity();
 
@@ -249,7 +294,7 @@ var onRoomCapacityElementChange = function () {
 var onOfferTypeElementChange = function () {
   var minPrice = offerTypesMinPrices[offerTypeInputElement.value];
   priceInputElement.min = minPrice;
-  priceInputElement.placeholder = 'минимум: ' + minPrice;
+  priceInputElement.placeholder = minPrice;
   if (+priceInputElement.value) {
     priceInputElement.reportValidity();
   }
@@ -292,11 +337,15 @@ var activatePage = function () {
   offerCheckOutInputElement.addEventListener('change', onCheckOutElementChange);
   addOfferFormElement.addEventListener('submit', onFormSubmit);
 
+  // обработчик клика по pin
+  // pinDestinationElement.addEventListener('click', onMapPinsClick, false);
+
   fillAdressInput(getElementLocation(mapPinMainElement, true));
 
   // метод отрисовки карточки можно закомментировать до тех пор, пока вы не доберётесь до 2-й части задания, чтобы eslint не ругался
   var offerCard = createOfferCard(similarOffers);
   cardDestinationElement.before(offerCard);
+
 };
 
 var deactivatePage = function () {
