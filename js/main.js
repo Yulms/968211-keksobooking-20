@@ -166,20 +166,23 @@ var getSimilarOffers = function (offersNumber) {
   return similarOffers;
 };
 
-var createSimilarOfferPin = function (offerObject) {
+var similarOffers = getSimilarOffers(OFFERS_NUMBER);
+
+var createSimilarOfferPin = function (offer, index) {
   var offerPin = pinTemplateElement.cloneNode(true);
-  offerPin.style.left = offerObject.location.x + 'px';
-  offerPin.style.top = offerObject.location.y + 'px';
+  offerPin.style.left = offer.location.x + 'px';
+  offerPin.style.top = offer.location.y + 'px';
   offerPin.style.transform = 'translate(-50%, -100%)';
-  offerPin.querySelector('img').src = offerObject.author.avatar;
-  offerPin.querySelector('img').alt = offerObject.offer.title;
+  offerPin.dataset.id = index;
+  offerPin.querySelector('img').src = offer.author.avatar;
+  offerPin.querySelector('img').alt = offer.offer.title;
   return offerPin;
 };
 
-var getSimilarOfferPinsFragment = function (similarOffers) {
+var getSimilarOfferPinsFragment = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < similarOffers.length; i++) {
-    var offer = createSimilarOfferPin(similarOffers[i]);
+    var offer = createSimilarOfferPin(similarOffers[i], i);
     fragment.append(offer);
   }
   return fragment;
@@ -234,20 +237,42 @@ var getTime = function (similarOffer) {
   return 'Заезд после ' + similarOffer.offer.checkInOut + ', выезд до ' + similarOffer.offer.checkInOut + '.';
 };
 
-var createOfferCard = function (similarOffers) {
-  var offerCard = cardTemplateElement.cloneNode(true);
+var createOfferCardElement = function (offerData) {
+  var offerCardElement = cardTemplateElement.cloneNode(true);
 
-  addContentOrRemove(offerCard, '.popup__title', 'textContent', similarOffers[0].offer.title);
-  addContentOrRemove(offerCard, '.popup__text--address', 'textContent', similarOffers[0].offer.address);
-  addContentOrRemove(offerCard, '.popup__text--price', 'textContent', similarOffers[0].offer.price + PRICE_UNIT);
-  addContentOrRemove(offerCard, '.popup__type', 'textContent', findArrayOfObjectsValue(OFFER_TYPES, TYPE_PROPERTY_NAME, similarOffers[0].offer.type, TYPE_IN_RUSSIAN_NAME));
-  addContentOrRemove(offerCard, '.popup__text--capacity', 'textContent', getCapacity(similarOffers[0]));
-  addContentOrRemove(offerCard, '.popup__text--time', 'textContent', getTime(similarOffers[0]));
-  addContentOrRemove(offerCard, '.popup__description', 'textContent', similarOffers[0].offer.description);
-  addContentOrRemove(offerCard, '.popup__avatar', 'src', similarOffers[0].author.avatar);
-  addOfferCardFeatures(offerCard, similarOffers[0].offer.features);
-  addOfferCardThumbnails(offerCard, similarOffers[0].offer.photos);
-  return offerCard;
+  addContentOrRemove(offerCardElement, '.popup__title', 'textContent', offerData.offer.title);
+  addContentOrRemove(offerCardElement, '.popup__text--address', 'textContent', offerData.offer.address);
+  addContentOrRemove(offerCardElement, '.popup__text--price', 'textContent', offerData.offer.price + PRICE_UNIT);
+  addContentOrRemove(offerCardElement, '.popup__type', 'textContent', findArrayOfObjectsValue(OFFER_TYPES, TYPE_PROPERTY_NAME, offerData.offer.type, TYPE_IN_RUSSIAN_NAME));
+  addContentOrRemove(offerCardElement, '.popup__text--capacity', 'textContent', getCapacity(offerData));
+  addContentOrRemove(offerCardElement, '.popup__text--time', 'textContent', getTime(offerData));
+  addContentOrRemove(offerCardElement, '.popup__description', 'textContent', offerData.offer.description);
+  addContentOrRemove(offerCardElement, '.popup__avatar', 'src', offerData.author.avatar);
+  addOfferCardFeatures(offerCardElement, offerData.offer.features);
+  addOfferCardThumbnails(offerCardElement, offerData.offer.photos);
+
+  offerCardElement.querySelector('.popup__close').addEventListener('click', onPopupCloseClick);
+  document.addEventListener('keydown', onPopupCloseEscPress);
+
+  return offerCardElement;
+};
+
+var onPopupCloseClick = function () {
+  deleteOfferCardElement();
+};
+
+var onPopupCloseEscPress = function (evt) {
+  if (evt.keyCode === KeyCodes.ESCAPE) {
+    deleteOfferCardElement();
+  }
+};
+
+var deleteOfferCardElement = function () {
+  var openedOfferElement = document.querySelector('.map__card');
+  if (openedOfferElement) {
+    openedOfferElement.remove();
+    document.removeEventListener('keydown', onPopupCloseEscPress);
+  }
 };
 
 var onMapPinMainElementMousedown = function (evt) {
@@ -325,11 +350,24 @@ var onCheckOutElementChange = function () {
   synchronizeTimeElements(offerCheckOutInputElement, offerCheckInInputElement);
 };
 
-
-var activatePage = function () {
-  var similarOffers = getSimilarOffers(OFFERS_NUMBER);
+var addMapPins = function () {
   var similarOfferPinsFragment = getSimilarOfferPinsFragment(similarOffers);
   pinDestinationElement.append(similarOfferPinsFragment);
+};
+
+var onMapClick = function (evt) {
+  var pinButton = evt.target.closest('.map__pin:not(.map__pin--main)');
+  if (pinButton) {
+    deleteOfferCardElement();
+    var clickedPinData = similarOffers[pinButton.dataset.id];
+    var offerCardElement = createOfferCardElement(clickedPinData);
+    cardDestinationElement.before(offerCardElement);
+  }
+};
+
+
+var activatePage = function () {
+  addMapPins();
   mapElement.classList.remove('map--faded');
   addOfferFormElement.classList.remove('ad-form--disabled');
   changeCollectionAttribute(addOfferFormElement.children, 'disabled', false);
@@ -343,16 +381,9 @@ var activatePage = function () {
   offerCheckInInputElement.addEventListener('change', onCheckInElementChange);
   offerCheckOutInputElement.addEventListener('change', onCheckOutElementChange);
   addOfferFormElement.addEventListener('submit', onFormSubmit);
-
-  // обработчик клика по pin
-  // pinDestinationElement.addEventListener('click', onMapPinsClick, false);
+  pinDestinationElement.addEventListener('click', onMapClick);
 
   fillAdressInput(getElementLocation(mapPinMainElement, true));
-
-  // метод отрисовки карточки можно закомментировать до тех пор, пока вы не доберётесь до 2-й части задания, чтобы eslint не ругался
-  var offerCard = createOfferCard(similarOffers);
-  cardDestinationElement.before(offerCard);
-
 };
 
 var deactivatePage = function () {
@@ -369,6 +400,7 @@ var deactivatePage = function () {
   offerCheckInInputElement.removeEventListener('change', onCheckInElementChange);
   offerCheckOutInputElement.removeEventListener('change', onCheckOutElementChange);
   addOfferFormElement.removeEventListener('submit', onFormSubmit);
+  pinDestinationElement.removeEventListener('click', onMapClick);
 
   fillAdressInput(getElementLocation(mapPinMainElement, false));
 };
