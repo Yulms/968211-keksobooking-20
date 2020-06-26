@@ -168,21 +168,21 @@ var getSimilarOffers = function (offersNumber) {
 
 var similarOffers = getSimilarOffers(OFFERS_NUMBER);
 
-var createSimilarOfferPin = function (offer, index) {
-  var offerPin = pinTemplateElement.cloneNode(true);
-  offerPin.style.left = offer.location.x + 'px';
-  offerPin.style.top = offer.location.y + 'px';
-  offerPin.style.transform = 'translate(-50%, -100%)';
-  offerPin.dataset.id = index;
-  offerPin.querySelector('img').src = offer.author.avatar;
-  offerPin.querySelector('img').alt = offer.offer.title;
-  return offerPin;
+var createSimilarOfferPinElement = function (offer, index) {
+  var offerPinElement = pinTemplateElement.cloneNode(true);
+  offerPinElement.style.left = offer.location.x + 'px';
+  offerPinElement.style.top = offer.location.y + 'px';
+  offerPinElement.style.transform = 'translate(-50%, -100%)';
+  offerPinElement.dataset.id = index;
+  offerPinElement.querySelector('img').src = offer.author.avatar;
+  offerPinElement.querySelector('img').alt = offer.offer.title;
+  return offerPinElement;
 };
 
 var getSimilarOfferPinsFragment = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < similarOffers.length; i++) {
-    var offer = createSimilarOfferPin(similarOffers[i], i);
+    var offer = createSimilarOfferPinElement(similarOffers[i], i);
     fragment.append(offer);
   }
   return fragment;
@@ -202,6 +202,7 @@ var addOfferCardFeatures = function (offerCard, features) {
   } else {
     offerFeaturesList.remove();
   }
+  console.log(111);
 };
 
 var addOfferCardThumbnails = function (offerCard, imageSources) {
