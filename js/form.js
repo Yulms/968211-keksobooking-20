@@ -82,7 +82,7 @@
     fillAdressInput(window.map.getMainPinVerticalBottomLocation);
   };
 
-  var deActivateForm = function () {
+  var deactivateForm = function () {
     addOfferFormElement.classList.add('ad-form--disabled');
     window.util.changeCollectionAttribute(addOfferFormElement.children, 'disabled', true);
     roomsNumberElement.removeEventListener('change', onRoomsNumberElementChange);
@@ -96,7 +96,7 @@
 
   window.form = {
     activate: activateForm,
-    deActivate: deActivateForm
+    deactivate: deactivateForm
   };
 
 })();

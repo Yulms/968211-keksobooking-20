@@ -6,17 +6,17 @@
     window.form.activate();
   };
 
-  var deActivatePage = function () {
-    window.map.deActivate();
-    window.form.deActivate();
+  var deactivatePage = function () {
+    window.map.deactivate();
+    window.form.deactivate();
   };
 
   window.main = {
     activatePage: activatePage,
-    deActivatePage: deActivatePage,
+    deactivatePage: deactivatePage,
 
   };
 
-  deActivatePage();
+  deactivatePage();
 
 })();

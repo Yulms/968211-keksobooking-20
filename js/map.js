@@ -75,7 +75,7 @@
     pinDestinationElement.addEventListener('click', onPinClick);
   };
 
-  var deActivateMap = function () {
+  var deactivateMap = function () {
     removeMapPins();
     mapElement.classList.add('map--faded');
     window.util.changeCollectionAttribute(mapFiltersFormElement.children, 'disabled', true);
@@ -87,7 +87,7 @@
 
   window.map = {
     activate: activateMap,
-    deActivate: deActivateMap,
+    deactivate: deactivateMap,
     getMainPinVerticalCenterLocation: getMainPinVerticalCenterLocation,
     getMainPinVerticalBottomLocation: getMainPinVerticalBottomLocation
   };
