@@ -98,8 +98,8 @@
   };
 
   window.card = {
-    showOfferCardElement: showOfferCardElement,
-    deleteOfferCardElement: deleteOfferCardElement
+    show: showOfferCardElement,
+    hide: deleteOfferCardElement
   };
 
 })();
