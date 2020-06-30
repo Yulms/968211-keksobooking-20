@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var MAIN_PIN_EXTRA_OFFSET_X = 0;
+  var MAIN_PIN_EXTRA_OFFSET_Y = 22;
+
   var mapElement = document.querySelector('.map');
   var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinDestinationElement = mapElement.querySelector('.map__pins');
@@ -27,29 +30,21 @@
     return fragment;
   };
 
-  // var getElementLocation = function (element, isSharpEndMark) {
-  //   isSharpEndMark = isSharpEndMark || true;
-  //   var verticalOffset = (isSharpEndMark) ? (element.offsetTop + element.offsetHeight) : (element.offsetTop + element.offsetHeight / 2);
-  //   return {
-  //     x: Math.round(element.offsetLeft + element.offsetWidth / 2),
-  //     y: Math.round(verticalOffset)
-  //   };
-  // };
-
-  // var getMainPinVerticalCenterLocation = getElementLocation(mapPinMainElement, true);
-  // var getMainPinVerticalBottomLocation = getElementLocation(mapPinMainElement, false);
-
-
-  var makeElementLocationCallback = function (element, isSharpEndMark) {
+  var makeElementLocationCallback = function (element, isSharpEndMark, extraOffsetX, extraOffsetY) {
+    extraOffsetX = extraOffsetX || 0;
+    extraOffsetY = extraOffsetY || 0;
     return function () {
-      var verticalOffset = (isSharpEndMark) ? (element.offsetTop + element.offsetHeight) : (element.offsetTop + element.offsetHeight / 2);
+      var verticalOffset = (isSharpEndMark) ?
+        (element.offsetTop + element.offsetHeight + extraOffsetY) :
+        (element.offsetTop + extraOffsetY + element.offsetHeight / 2);
+      var horizontalOffset = element.offsetLeft + extraOffsetX + element.offsetWidth / 2;
+
       return {
-        x: Math.round(element.offsetLeft + element.offsetWidth / 2),
+        x: Math.round(horizontalOffset),
         y: Math.round(verticalOffset)
       };
     };
   };
-
 
   var addMapPins = function () {
     var similarOfferPinsFragment = getSimilarOfferPinsFragment(window.data.similarOffers);
@@ -85,7 +80,8 @@
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
-    window.drag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
+    // window.drag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
+    // var mainPinDrag = window.drag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
   };
 
   var deactivateMap = function () {
@@ -95,7 +91,7 @@
     mapPinMainElement.addEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.addEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.removeEventListener('click', onPinClick);
-    window.drag.deactivate();
+    // window.drag.deactivate();
     window.card.hide();
   };
 
@@ -103,8 +99,13 @@
   window.map = {
     activate: activateMap,
     deactivate: deactivateMap,
-    getMainPinVerticalCenterLocation: makeElementLocationCallback(mapPinMainElement, true),
-    getMainPinVerticalBottomLocation: makeElementLocationCallback(mapPinMainElement, false)
+    getMainPinVerticalCenterLocation: makeElementLocationCallback(mapPinMainElement, false),
+    getMainPinVerticalBottomLocation: makeElementLocationCallback(
+        mapPinMainElement,
+        true,
+        MAIN_PIN_EXTRA_OFFSET_X,
+        MAIN_PIN_EXTRA_OFFSET_Y
+    )
   };
 
 })();
