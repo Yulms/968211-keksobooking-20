@@ -3,12 +3,18 @@
 (function () {
   var MAIN_PIN_EXTRA_OFFSET_X = 0;
   var MAIN_PIN_EXTRA_OFFSET_Y = 22;
+  var DRAG_LIMIT_VERTICAL = {
+    top: 130,
+    bottom: 630
+  };
 
   var mapElement = document.querySelector('.map');
   var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinDestinationElement = mapElement.querySelector('.map__pins');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
   var mapFiltersFormElement = mapElement.querySelector('.map__filters');
+  var mainPinDrag = window.drag();
+
 
   var createSimilarOfferPinElement = function (offer, index) {
     var offerPinElement = pinTemplateElement.cloneNode(true);
@@ -80,8 +86,14 @@
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
-    // window.drag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
-    // var mainPinDrag = window.drag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
+
+    mainPinDrag.setDragLimit(
+        DRAG_LIMIT_VERTICAL.top - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+        mapPinMainElement.offsetParent.offsetWidth - mapPinMainElement.offsetWidth / 2,
+        DRAG_LIMIT_VERTICAL.bottom - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+        -mapPinMainElement.offsetWidth / 2
+    );
+    mainPinDrag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
   };
 
   var deactivateMap = function () {
@@ -91,7 +103,7 @@
     mapPinMainElement.addEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.addEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.removeEventListener('click', onPinClick);
-    // window.drag.deactivate();
+    mainPinDrag.deactivate();
     window.card.hide();
   };
 
