@@ -48,30 +48,6 @@ window.drag = (function () {
       };
     };
 
-    var checkMoveValidation = function () {
-      var validationResult = {};
-
-      if (
-        targetCSSPosition.left >= dragLimit.left &&
-        targetCSSPosition.left <= dragLimit.right
-      ) {
-        validationResult.x = true;
-      } else {
-        validationResult.x = false;
-      }
-
-      if (
-        targetCSSPosition.top >= dragLimit.top &&
-        targetCSSPosition.top <= dragLimit.bottom
-      ) {
-        validationResult.y = true;
-      } else {
-        validationResult.y = false;
-      }
-
-      return validationResult;
-    };
-
     var changeCSSPosition = function (isValidX, isValidY) {
       if (isValidX) {
         draggedElement.style.left = (targetCSSPosition.left) + 'px';
@@ -85,9 +61,12 @@ window.drag = (function () {
       updateShiftCursorCoords(evt);
       updateTargetCSSPosition();
 
-      var validationResult = checkMoveValidation();
-      changeCSSPosition(validationResult.x, validationResult.y);
-      if (validationResult.x || validationResult.y) {
+      var isValidX = targetCSSPosition.left >= dragLimit.left && targetCSSPosition.left <= dragLimit.right;
+      var isValidY = targetCSSPosition.top >= dragLimit.top && targetCSSPosition.top <= dragLimit.bottom;
+
+      changeCSSPosition(isValidX, isValidY);
+
+      if (isValidX || isValidY) {
         updateStartCursorCoords(evt);
         if (typeof callback === 'function') {
           callback();
@@ -127,12 +106,12 @@ window.drag = (function () {
       }
     };
 
-    var setDragLimit = function (top, right, bottom, left) {
+    var setDragLimit = function (limits) {
       dragLimit = {
-        top: top,
-        right: right,
-        bottom: bottom,
-        left: left
+        top: limits.top,
+        right: limits.right,
+        bottom: limits.bottom,
+        left: limits.left
       };
     };
 

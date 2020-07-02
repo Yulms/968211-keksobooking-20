@@ -8,6 +8,7 @@
     bottom: 630
   };
 
+
   var mapElement = document.querySelector('.map');
   var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinDestinationElement = mapElement.querySelector('.map__pins');
@@ -87,12 +88,13 @@
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
 
-    mainPinDrag.setDragLimit(
-        DRAG_LIMIT_VERTICAL.top - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
-        mapPinMainElement.offsetParent.offsetWidth - mapPinMainElement.offsetWidth / 2,
-        DRAG_LIMIT_VERTICAL.bottom - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
-        -mapPinMainElement.offsetWidth / 2
-    );
+    var dragLimits = {
+      top: DRAG_LIMIT_VERTICAL.top - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+      right: mapPinMainElement.offsetParent.offsetWidth - mapPinMainElement.offsetWidth / 2,
+      bottom: DRAG_LIMIT_VERTICAL.bottom - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+      left: -mapPinMainElement.offsetWidth / 2
+    };
+    mainPinDrag.setDragLimit(dragLimits);
     mainPinDrag.activate(mapPinMainElement, mapPinMainElement, window.form.fillActiveFormAddressInput);
   };
 
