@@ -64,9 +64,8 @@ window.drag = (function () {
       var isValidX = targetCSSPosition.left >= dragLimit.left && targetCSSPosition.left <= dragLimit.right;
       var isValidY = targetCSSPosition.top >= dragLimit.top && targetCSSPosition.top <= dragLimit.bottom;
 
-      changeCSSPosition(isValidX, isValidY);
-
       if (isValidX || isValidY) {
+        changeCSSPosition(isValidX, isValidY);
         updateStartCursorCoords(evt);
         if (typeof callback === 'function') {
           callback();
