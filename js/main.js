@@ -13,8 +13,7 @@
 
   window.main = {
     activatePage: activatePage,
-    deactivatePage: deactivatePage,
-
+    deactivatePage: deactivatePage
   };
 
   deactivatePage();

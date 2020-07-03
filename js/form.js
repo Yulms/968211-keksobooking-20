@@ -15,6 +15,14 @@
     addressInputElement.value = location.x + ', ' + location.y;
   };
 
+  var fillActiveFormAddressInput = function () {
+    return fillAdressInput(window.map.getMainPinVerticalBottomLocation());
+  };
+
+  var fillNotActiveFormAddressInput = function () {
+    return fillAdressInput(window.map.getMainPinVerticalCenterLocation());
+  };
+
   var validateRoomToCapacity = function () {
     var ROOMS = window.data.ROOMS;
     var selectedRooms = parseInt(roomsNumberElement.value, 10);
@@ -79,7 +87,7 @@
     offerCheckInInputElement.addEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.addEventListener('change', onCheckOutElementChange);
     addOfferFormElement.addEventListener('submit', onFormSubmit);
-    fillAdressInput(window.map.getMainPinVerticalBottomLocation);
+    fillActiveFormAddressInput();
   };
 
   var deactivateForm = function () {
@@ -91,12 +99,13 @@
     offerCheckInInputElement.removeEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.removeEventListener('change', onCheckOutElementChange);
     addOfferFormElement.removeEventListener('submit', onFormSubmit);
-    fillAdressInput(window.map.getMainPinVerticalCenterLocation);
+    fillNotActiveFormAddressInput();
   };
 
   window.form = {
     activate: activateForm,
-    deactivate: deactivateForm
+    deactivate: deactivateForm,
+    fillActiveFormAddressInput: fillActiveFormAddressInput
   };
 
 })();
