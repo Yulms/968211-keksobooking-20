@@ -84,7 +84,7 @@
 
   var showOfferCardElement = function (offerID) {
     deleteOfferCardElement();
-    var offerData = window.data.similarOffers[offerID];
+    var offerData = window.data.readSimilarOffers()[offerID];
     var offerCardElement = createOfferCardElement(offerData);
     cardDestinationElement.before(offerCardElement);
   };
