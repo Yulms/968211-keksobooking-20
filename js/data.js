@@ -60,11 +60,11 @@
     similarOffers = data;
   };
 
-  var readSimilarOffers = function () {
+  var getSimilarOffers = function () {
     return similarOffers;
   };
 
-  var getSimilarOffers = function (callback) {
+  var getSimilarOffersFromServer = function (callback) {
     var onSuccess = function (data) {
       callback(data);
       updateSimilarOffers(data);
@@ -95,8 +95,8 @@
 
 
   window.data = {
-    readSimilarOffers: readSimilarOffers,
     getSimilarOffers: getSimilarOffers,
+    getSimilarOffersFromServer: getSimilarOffersFromServer,
     getOfferTypeInRussian: getOfferTypeInRussian,
     getMinPrice: getMinPrice,
     OFFER_TYPES: OFFER_TYPES,
