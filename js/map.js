@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var MAX_PINS_NUMBER = 5;
   var MAIN_PIN_EXTRA_OFFSET_X = 0;
   var MAIN_PIN_EXTRA_OFFSET_Y = 22;
   var DRAG_LIMIT_VERTICAL = {
@@ -28,10 +29,10 @@
     return offerPinElement;
   };
 
-  var getSimilarOfferPinsFragment = function () {
+  var getSimilarOfferPinsFragment = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.data.similarOffers.length; i++) {
-      var offer = createSimilarOfferPinElement(window.data.similarOffers[i], i);
+    for (var i = 0; i < MAX_PINS_NUMBER; i++) {
+      var offer = createSimilarOfferPinElement(data[i], i);
       fragment.append(offer);
     }
     return fragment;
@@ -53,8 +54,8 @@
     };
   };
 
-  var addMapPins = function () {
-    var similarOfferPinsFragment = getSimilarOfferPinsFragment(window.data.similarOffers);
+  var addMapPins = function (data) {
+    var similarOfferPinsFragment = getSimilarOfferPinsFragment(data);
     pinDestinationElement.append(similarOfferPinsFragment);
   };
 
@@ -81,7 +82,7 @@
   };
 
   var activateMap = function () {
-    addMapPins();
+    window.data.getSimilarOffersFromServer(addMapPins);
     mapElement.classList.remove('map--faded');
     window.util.changeCollectionAttribute(mapFiltersFormElement.children, 'disabled', false);
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
@@ -107,6 +108,7 @@
     pinDestinationElement.removeEventListener('click', onPinClick);
     mainPinDrag.deactivate();
     window.card.hide();
+    mapFiltersFormElement.reset();
   };
 
 

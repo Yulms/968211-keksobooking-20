@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
-  var OFFERS_NUMBER = 4;
   var OFFER_TYPES = [
     {
       type: 'palace',
@@ -53,52 +51,29 @@
   var TYPE_IN_RUSSIAN_NAME = 'typeInRussian';
   var CHECK_IN__OUT_TIMES = ['12:00', '13:00', '14:00'];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  var PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ];
   var PRICE_UNIT = '₽/ночь';
 
+  var similarOffers = [];
 
-  var getAvatarLink = function (i) {
-    var avatarNumber = '0' + (i + 1);
-    return 'img/avatars/user' + avatarNumber + '.png';
+
+  var updateSimilarOffers = function (data) {
+    similarOffers = data;
   };
 
-  var getSimilarOffer = function (i) {
-    var locationX = window.util.getRandomInteger(0, MAP_WIDTH);
-    var locationY = window.util.getRandomInteger(130, 630);
-
-    return {
-      author: {
-        avatar: getAvatarLink(i)
-      },
-      offer: {
-        title: 'Уютное гнездышко',
-        address: locationX + ', ' + locationY,
-        price: 42000,
-        type: OFFER_TYPES[window.util.getRandomInteger(0, OFFER_TYPES.length - 1)].type,
-        rooms: 3,
-        guests: 6,
-        checkInOut: window.util.getRandomArrayValue(CHECK_IN__OUT_TIMES),
-        features: window.util.getRandomArray(FEATURES),
-        description: 'Великолепный таун-хауз в центре Токио.',
-        photos: window.util.getRandomArray(PHOTOS)
-      },
-      location: {
-        x: locationX,
-        y: locationY
-      }
-    };
-  };
-
-  var getSimilarOffers = function (offersNumber) {
-    var similarOffers = [];
-    for (var i = 0; i < offersNumber; i++) {
-      similarOffers.push(getSimilarOffer(i));
-    }
+  var getSimilarOffers = function () {
     return similarOffers;
+  };
+
+  var getSimilarOffersFromServer = function (callback) {
+    var onSuccess = function (data) {
+      callback(data);
+      updateSimilarOffers(data);
+    };
+
+    var onError = function () {
+
+    };
+    window.backend.load(onSuccess, onError);
   };
 
   var getOfferTypeInRussian = function (offerTypeInEnglish) {
@@ -120,12 +95,15 @@
 
 
   window.data = {
-    similarOffers: getSimilarOffers(OFFERS_NUMBER),
+    getSimilarOffers: getSimilarOffers,
+    getSimilarOffersFromServer: getSimilarOffersFromServer,
     getOfferTypeInRussian: getOfferTypeInRussian,
     getMinPrice: getMinPrice,
     OFFER_TYPES: OFFER_TYPES,
     PRICE_UNIT: PRICE_UNIT,
-    ROOMS: ROOMS
+    ROOMS: ROOMS,
+    CHECK_IN__OUT_TIMES: CHECK_IN__OUT_TIMES,
+    FEATURES: FEATURES
   };
 
 })();
