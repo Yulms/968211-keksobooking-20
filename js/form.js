@@ -6,6 +6,7 @@
   var roomsNumberElement = addOfferFormElement.querySelector('#room_number');
   var roomCapacityElement = addOfferFormElement.querySelector('#capacity');
   var offerTypeInputElement = addOfferFormElement.querySelector('#type');
+  var offerTypeInputElementDefaultValue = offerTypeInputElement.value;
   var priceInputElement = addOfferFormElement.querySelector('#price');
   var offerCheckInInputElement = addOfferFormElement.querySelector('#timein');
   var offerCheckOutInputElement = addOfferFormElement.querySelector('#timeout');
@@ -88,6 +89,8 @@
   };
 
   var onFormReset = function () {
+    offerTypeInputElement.value = offerTypeInputElementDefaultValue;
+    validateMinPrice();
     window.main.deactivatePage();
   };
 

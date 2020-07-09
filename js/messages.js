@@ -2,8 +2,6 @@
 
 (function () {
 
-  var CLOSE_EXCEPTION_CLASSES = ['.success__message', '.error__message'];
-
   var MessageTypes = {
     SUCCESS: 'success',
     ERROR: 'error',
@@ -23,18 +21,8 @@
     window.util.isEscapePressEvent(evt, closeMessage);
   };
 
-  var onMessageClick = function (evt) {
-    var isClickOnException = false;
-
-    CLOSE_EXCEPTION_CLASSES.forEach(function (item) {
-      if (evt.target.closest(item)) {
-        isClickOnException = true;
-      }
-    });
-
-    if (!isClickOnException) {
-      closeMessage();
-    }
+  var onMessageClick = function () {
+    closeMessage();
   };
 
   var addHandlers = function (messageType) {
@@ -49,17 +37,31 @@
     document.removeEventListener('keydown', onDocumentEscPress);
   };
 
-  var showSuccess = function () {
-    openedMessageElement = successTemplate.cloneNode(true);
-    addHandlers(MessageTypes.SUCCESS);
+  var showMessage = function (messageType, text) {
+    switch (messageType) {
+      case MessageTypes.SUCCESS:
+        openedMessageElement = successTemplate.cloneNode(true);
+        addHandlers(MessageTypes.SUCCESS);
+        break;
+
+      case MessageTypes.ERROR:
+        openedMessageElement = errorTemplate.cloneNode(true);
+        if (text) {
+          openedMessageElement.querySelector('.error__message').textContent = text;
+        }
+        addHandlers(MessageTypes.ERROR);
+        break;
+    }
+
     destinationElement.append(openedMessageElement);
   };
 
-  var showError = function (message) {
-    openedMessageElement = errorTemplate.cloneNode(true);
-    openedMessageElement.querySelector('.error__message').textContent = message;
-    addHandlers(MessageTypes.ERROR);
-    destinationElement.append(openedMessageElement);
+  var showSuccess = function () {
+    showMessage(MessageTypes.SUCCESS);
+  };
+
+  var showError = function () {
+    showMessage(MessageTypes.ERROR);
   };
 
 
@@ -67,4 +69,5 @@
     showSuccess: showSuccess,
     showError: showError
   };
+
 })();
