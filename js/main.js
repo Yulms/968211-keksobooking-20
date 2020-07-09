@@ -8,6 +8,7 @@
 
   var deactivatePage = function () {
     window.map.deactivate();
+    window.form.reset();
     window.form.deactivate();
   };
 

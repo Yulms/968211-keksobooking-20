@@ -50,7 +50,7 @@
     validateRoomToCapacity();
   };
 
-  var onOfferTypeElementChange = function () {
+  var validateMinPrice = function () {
     var minPrice = window.data.getMinPrice(offerTypeInputElement.value);
 
     priceInputElement.min = minPrice;
@@ -60,10 +60,32 @@
     }
   };
 
+  var onOfferTypeElementChange = function () {
+    validateMinPrice();
+  };
+
+  var onPriceElementChange = function () {
+    validateMinPrice();
+  };
+
   var onFormSubmit = function (evt) {
+    var onFormSendSuccess = function () {
+      // window.main.deactivatePage();
+      // window.messages.showSuccess();
+      window.messages.showError();
+    };
+
+    var onFormSendError = function () {
+      window.messages.showError();
+    };
+
     if (!validateRoomToCapacity()) {
       evt.preventDefault();
     }
+
+    var formData = new FormData(addOfferFormElement);
+    window.backend.save(formData, onFormSendSuccess, onFormSendError);
+    evt.preventDefault();
   };
 
   var synchronizeTimeElements = function (baseElement, syncronizedElement) {
@@ -83,6 +105,7 @@
     window.util.changeCollectionAttribute(addOfferFormElement.children, 'disabled', false);
     roomsNumberElement.addEventListener('change', onRoomsNumberElementChange);
     roomCapacityElement.addEventListener('change', onRoomCapacityElementChange);
+    priceInputElement.addEventListener('change', onPriceElementChange);
     offerTypeInputElement.addEventListener('change', onOfferTypeElementChange);
     offerCheckInInputElement.addEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.addEventListener('change', onCheckOutElementChange);
@@ -95,6 +118,7 @@
     window.util.changeCollectionAttribute(addOfferFormElement.children, 'disabled', true);
     roomsNumberElement.removeEventListener('change', onRoomsNumberElementChange);
     roomCapacityElement.removeEventListener('change', onRoomCapacityElementChange);
+    priceInputElement.removeEventListener('change', onPriceElementChange);
     offerTypeInputElement.removeEventListener('change', onOfferTypeElementChange);
     offerCheckInInputElement.removeEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.removeEventListener('change', onCheckOutElementChange);
@@ -102,10 +126,15 @@
     fillNotActiveFormAddressInput();
   };
 
+  var resetForm = function () {
+    addOfferFormElement.reset();
+  };
+
   window.form = {
     activate: activateForm,
     deactivate: deactivateForm,
-    fillActiveFormAddressInput: fillActiveFormAddressInput
+    fillActiveFormAddressInput: fillActiveFormAddressInput,
+    reset: resetForm
   };
 
 })();

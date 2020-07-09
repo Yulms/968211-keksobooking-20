@@ -83,8 +83,9 @@
   };
 
   var showOfferCardElement = function (offerID) {
+    debugger;
     deleteOfferCardElement();
-    var offerData = window.data.readSimilarOffers()[offerID];
+    var offerData = window.data.getSimilarOffers()[offerID];
     var offerCardElement = createOfferCardElement(offerData);
     cardDestinationElement.before(offerCardElement);
   };

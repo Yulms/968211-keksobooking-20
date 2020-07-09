@@ -46,6 +46,18 @@
     return resultValue;
   };
 
+  // поиск в массиве объектов до первого соответствия. Возвращает объект
+  var findArrayOfObjectsObject = function (arr, keyName, keyValue) {
+    var resultValue;
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i][keyName] === keyValue) {
+        resultValue = arr[i];
+        break;
+      }
+    }
+    return resultValue;
+  };
+
   var isEscapePressEvent = function (evt, callback) {
     if (evt.keyCode === KeyCodes.ESCAPE) {
       callback();
@@ -70,6 +82,7 @@
     getRandomArray: getRandomArray,
     changeCollectionAttribute: changeCollectionAttribute,
     findArrayOfObjectsValue: findArrayOfObjectsValue,
+    findArrayOfObjectsObject: findArrayOfObjectsObject,
     isEscapePressEvent: isEscapePressEvent,
     isEnterPressEvent: isEnterPressEvent,
     isLeftButtonMouseDown: isLeftButtonMouseDown

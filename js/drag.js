@@ -21,6 +21,7 @@ window.drag = (function () {
     var handleElement;
     var draggedElement;
     var callback;
+    var startPosition = {};
 
     var startCursorCoords = {};
     var shiftCursorCoords = {};
@@ -95,11 +96,17 @@ window.drag = (function () {
       handleElement = handle;
       draggedElement = (dragged) ? dragged : (handle);
       callback = cb;
+      startPosition.left = draggedElement.style.left;
+      startPosition.top = draggedElement.style.top;
 
       handleElement.addEventListener('mousedown', onHandleMouseDown);
     };
 
     var deactivate = function () {
+      if (draggedElement) {
+        draggedElement.style.left = startPosition.left;
+        draggedElement.style.top = startPosition.top;
+      }
       if (handleElement) {
         handleElement.removeEventListener('mousedown', onHandleMouseDown);
       }
