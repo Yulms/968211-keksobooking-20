@@ -82,7 +82,7 @@
   };
 
   var activateMap = function () {
-    window.data.getSimilarOffers(addMapPins);
+    window.data.getSimilarOffersFromServer(addMapPins);
     mapElement.classList.remove('map--faded');
     window.util.changeCollectionAttribute(mapFiltersFormElement.children, 'disabled', false);
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
@@ -108,6 +108,7 @@
     pinDestinationElement.removeEventListener('click', onPinClick);
     mainPinDrag.deactivate();
     window.card.hide();
+    mapFiltersFormElement.reset();
   };
 
 
