@@ -31,10 +31,18 @@
 
   var getSimilarOfferPinsFragment = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < MAX_PINS_NUMBER; i++) {
-      var offer = createSimilarOfferPinElement(data[i], i);
-      fragment.append(offer);
+    var addedPins = 0;
+
+    for (var i = 0; i < data.length; i++) {
+      if (addedPins < MAX_PINS_NUMBER && data[i].offer) {
+        var offer = createSimilarOfferPinElement(data[i], i);
+        fragment.append(offer);
+        addedPins++;
+      } else {
+        break;
+      }
     }
+
     return fragment;
   };
 
@@ -74,10 +82,17 @@
     window.util.isEnterPressEvent(evt, window.main.activatePage);
   };
 
+  var clearPins = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    activePin.classList.remove('map__pin--active');
+  };
+
   var onPinClick = function (evt) {
     var pinButton = evt.target.closest('.map__pin:not(.map__pin--main)');
+
     if (pinButton) {
       window.card.show(pinButton.dataset.id);
+      pinButton.classList.add('map__pin--active');
     }
   };
 
@@ -121,7 +136,8 @@
         true,
         MAIN_PIN_EXTRA_OFFSET_X,
         MAIN_PIN_EXTRA_OFFSET_Y
-    )
+    ),
+    clearPins: clearPins
   };
 
 })();

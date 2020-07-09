@@ -68,9 +68,10 @@
       updateSimilarOffers(data);
     };
 
-    var onError = function () {
-
+    var onError = function (data) {
+      window.messages.showError(data);
     };
+
     window.backend.load(onSuccess, onError);
   };
 

@@ -55,8 +55,9 @@
     destinationElement.append(openedMessageElement);
   };
 
-  var showError = function () {
+  var showError = function (message) {
     openedMessageElement = errorTemplate.cloneNode(true);
+    openedMessageElement.querySelector('.error__message').textContent = message;
     addHandlers(MessageTypes.ERROR);
     destinationElement.append(openedMessageElement);
   };

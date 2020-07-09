@@ -83,7 +83,6 @@
   };
 
   var showOfferCardElement = function (offerID) {
-    debugger;
     deleteOfferCardElement();
     var offerData = window.data.getSimilarOffers()[offerID];
     var offerCardElement = createOfferCardElement(offerData);
@@ -94,6 +93,7 @@
     var openedOfferElement = document.querySelector('.map__card');
     if (openedOfferElement) {
       openedOfferElement.remove();
+      window.map.clearPins();
       document.removeEventListener('keydown', onPopupCloseEscPress);
     }
   };

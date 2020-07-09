@@ -70,13 +70,12 @@
 
   var onFormSubmit = function (evt) {
     var onFormSendSuccess = function () {
-      // window.main.deactivatePage();
-      // window.messages.showSuccess();
-      window.messages.showError();
+      window.main.deactivatePage();
+      window.messages.showSuccess();
     };
 
-    var onFormSendError = function () {
-      window.messages.showError();
+    var onFormSendError = function (data) {
+      window.messages.showError(data);
     };
 
     if (!validateRoomToCapacity()) {
@@ -86,6 +85,10 @@
     var formData = new FormData(addOfferFormElement);
     window.backend.save(formData, onFormSendSuccess, onFormSendError);
     evt.preventDefault();
+  };
+
+  var onFormReset = function () {
+    window.main.deactivatePage();
   };
 
   var synchronizeTimeElements = function (baseElement, syncronizedElement) {
@@ -110,6 +113,7 @@
     offerCheckInInputElement.addEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.addEventListener('change', onCheckOutElementChange);
     addOfferFormElement.addEventListener('submit', onFormSubmit);
+    addOfferFormElement.addEventListener('reset', onFormReset);
     fillActiveFormAddressInput();
   };
 
@@ -123,6 +127,7 @@
     offerCheckInInputElement.removeEventListener('change', onCheckInElementChange);
     offerCheckOutInputElement.removeEventListener('change', onCheckOutElementChange);
     addOfferFormElement.removeEventListener('submit', onFormSubmit);
+    addOfferFormElement.removeEventListener('reset', onFormReset);
     fillNotActiveFormAddressInput();
   };
 
