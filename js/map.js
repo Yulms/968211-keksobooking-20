@@ -91,7 +91,7 @@
     var pinButton = evt.target.closest('.map__pin:not(.map__pin--main)');
 
     if (pinButton) {
-      window.card.show(pinButton.dataset.id);
+      window.card.show(pinButton.dataset.id, clearPins);
       pinButton.classList.add('map__pin--active');
     }
   };
@@ -136,8 +136,7 @@
         true,
         MAIN_PIN_EXTRA_OFFSET_X,
         MAIN_PIN_EXTRA_OFFSET_Y
-    ),
-    clearPins: clearPins
+    )
   };
 
 })();
