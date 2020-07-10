@@ -49,8 +49,6 @@
   var TYPE_PROPERTY_NAME = 'type';
   var MIN_PRICE_PROPERTY_NAME = 'minPrice';
   var TYPE_IN_RUSSIAN_NAME = 'typeInRussian';
-  var CHECK_IN__OUT_TIMES = ['12:00', '13:00', '14:00'];
-  var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var PRICE_UNIT = '₽/ночь';
 
   var similarOffers = [];
@@ -70,9 +68,10 @@
       updateSimilarOffers(data);
     };
 
-    var onError = function () {
-
+    var onError = function (data) {
+      window.messages.showError(data);
     };
+
     window.backend.load(onSuccess, onError);
   };
 
@@ -99,11 +98,8 @@
     getSimilarOffersFromServer: getSimilarOffersFromServer,
     getOfferTypeInRussian: getOfferTypeInRussian,
     getMinPrice: getMinPrice,
-    OFFER_TYPES: OFFER_TYPES,
     PRICE_UNIT: PRICE_UNIT,
-    ROOMS: ROOMS,
-    CHECK_IN__OUT_TIMES: CHECK_IN__OUT_TIMES,
-    FEATURES: FEATURES
+    ROOMS: ROOMS
   };
 
 })();

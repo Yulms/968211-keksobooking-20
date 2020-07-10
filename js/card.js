@@ -3,7 +3,7 @@
 (function () {
   var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
   var cardDestinationElement = document.querySelector('.map__filters-container');
-
+  var onCloseCallback;
 
   var getCapacity = function (similarOffer) {
     return similarOffer.offer.rooms + ' комнаты для ' + similarOffer.offer.guests + ' гостей';
@@ -82,17 +82,19 @@
     return offerCardElement;
   };
 
-  var showOfferCardElement = function (offerID) {
+  var showOfferCardElement = function (offerID, closeCallback) {
     deleteOfferCardElement();
-    var offerData = window.data.readSimilarOffers()[offerID];
+    var offerData = window.data.getSimilarOffers()[offerID];
     var offerCardElement = createOfferCardElement(offerData);
     cardDestinationElement.before(offerCardElement);
+    onCloseCallback = closeCallback;
   };
 
   var deleteOfferCardElement = function () {
     var openedOfferElement = document.querySelector('.map__card');
     if (openedOfferElement) {
       openedOfferElement.remove();
+      onCloseCallback();
       document.removeEventListener('keydown', onPopupCloseEscPress);
     }
   };
