@@ -14,7 +14,6 @@
   var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinDestinationElement = mapElement.querySelector('.map__pins');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
-  var mapFiltersFormElement = mapElement.querySelector('.map__filters');
   var mainPinDrag = window.drag();
 
 
@@ -62,7 +61,8 @@
     };
   };
 
-  var addMapPins = function (data) {
+  var renderMapPins = function (data) {
+    removeMapPins();
     var similarOfferPinsFragment = getSimilarOfferPinsFragment(data);
     pinDestinationElement.append(similarOfferPinsFragment);
   };
@@ -96,10 +96,15 @@
     }
   };
 
+
   var activateMap = function () {
-    window.data.getSimilarOffersFromServer(addMapPins);
+    window.data.getSimilarOffersFromServer(function (data) {
+      window.mapFilter.activate();
+      window.mapFilter.filterData(data, renderMapPins);
+    });
+
     mapElement.classList.remove('map--faded');
-    window.util.changeCollectionAttribute(mapFiltersFormElement.children, 'disabled', false);
+    window.mapFilter.activate();
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
@@ -115,15 +120,14 @@
   };
 
   var deactivateMap = function () {
+    window.card.hide();
     removeMapPins();
     mapElement.classList.add('map--faded');
-    window.util.changeCollectionAttribute(mapFiltersFormElement.children, 'disabled', true);
+    window.mapFilter.deactivate();
     mapPinMainElement.addEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.addEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.removeEventListener('click', onPinClick);
     mainPinDrag.deactivate();
-    window.card.hide();
-    mapFiltersFormElement.reset();
   };
 
 
@@ -136,7 +140,8 @@
         true,
         MAIN_PIN_EXTRA_OFFSET_X,
         MAIN_PIN_EXTRA_OFFSET_Y
-    )
+    ),
+    renderMapPins: renderMapPins
   };
 
 })();

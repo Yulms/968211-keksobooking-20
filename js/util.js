@@ -76,6 +76,15 @@
     }
   };
 
+  var isEmpty = function (obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   window.util = {
     getRandomInteger: getRandomInteger,
     getRandomArrayValue: getRandomArrayValue,
@@ -85,7 +94,8 @@
     findArrayOfObjectsObject: findArrayOfObjectsObject,
     isEscapePressEvent: isEscapePressEvent,
     isEnterPressEvent: isEnterPressEvent,
-    isLeftButtonMouseDown: isLeftButtonMouseDown
+    isLeftButtonMouseDown: isLeftButtonMouseDown,
+    isEmpty: isEmpty
   };
 
 })();

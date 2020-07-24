@@ -84,7 +84,7 @@
 
   var showOfferCardElement = function (offerID, closeCallback) {
     deleteOfferCardElement();
-    var offerData = window.data.getSimilarOffers()[offerID];
+    var offerData = window.mapFilter.getFilteredData()[offerID];
     var offerCardElement = createOfferCardElement(offerData);
     cardDestinationElement.before(offerCardElement);
     onCloseCallback = closeCallback;
