@@ -101,13 +101,15 @@
 
 
   var onFilterChange = function (evt) {
-    var filterField = filterElementIdToDataField[evt.target.id];
-    var choosenValue = evt.target.value;
-    var checkValue = evt.target.checked;
+    window.debounce(function () {
+      var filterField = filterElementIdToDataField[evt.target.id];
+      var choosenValue = evt.target.value;
+      var checkValue = evt.target.checked;
 
-    updatefilterParameters(filterField, choosenValue, checkValue);
-    window.card.hide();
-    filterData(null, window.map.renderMapPins);
+      updatefilterParameters(filterField, choosenValue, checkValue);
+      window.card.hide();
+      filterData(null, window.map.renderMapPins);
+    })();
   };
 
 
