@@ -62,6 +62,15 @@
     'guests': Number
   };
 
+  var FilteredTagName = {
+    SELECT: 'SELECT',
+    INPUT: 'INPUT'
+  };
+
+  var FilteredTagType = {
+    CHECKBOX: 'checkbox'
+  };
+
 
   var formatChoosenValue = function (filterField, choosenValue) {
     if (formatChosenValueToData.hasOwnProperty(filterField)) {
@@ -71,45 +80,64 @@
   };
 
 
-  var updatefilterParameters = function (filterField, choosenValue, checkValue) {
-    if (choosenValue === ANY_VALUE) {
-      delete filterParameters[filterField];
-    } else {
-      var formattedValue = formatChoosenValue(filterField, choosenValue);
-      // Не массив? - тупо присваиваем значение
-      if (checkValue === undefined) {
-        filterParameters[filterField] = formattedValue;
+  var getChangedTagInfo = function (evt) {
+    return {
+      tagName: evt.target.tagName,
+      type: evt.target.type
+    };
+  };
+
+
+  var updatefilterParametersFromSelectTag = function (filterField, choosenValue) {
+    filterParameters[filterField] = (choosenValue === ANY_VALUE) ? null : formatChoosenValue(filterField, choosenValue);
+  };
+
+  // var updatefilterParametersFromSelectTag = function (filterField, choosenValue) {
+  //   if (choosenValue === ANY_VALUE) {
+  //     delete filterParameters[filterField];
+  //   } else {
+  //     var formattedValue = formatChoosenValue(filterField, choosenValue);
+  //     filterParameters[filterField] = formattedValue;
+  //   }
+  // };
+
+  var updatefilterParametersFromCheckbox = function (filterField, choosenValue, shouldAdd) {
+    if (shouldAdd) {
+      if (filterParameters.hasOwnProperty(filterField)) {
+        filterParameters[filterField].push(choosenValue);
       } else {
-        // Массив. Если нужно добавить элемент массива (checkValue = true), проверяем есть ли свойство,
-        // если есть - добавляем, если нет - присваиваем
-        if (checkValue) {
-          if (filterParameters.hasOwnProperty(filterField)) {
-            filterParameters[filterField].push(formattedValue);
-          } else {
-            filterParameters[filterField] = formattedValue.split();
-          }
-        } else {
-          // чек убран (checkValue = false) - удаляем элемент массива, если он был единственный - удаляем свойство у объекта
-          filterParameters[filterField].splice(filterParameters[filterField].indexOf(formattedValue), 1);
-          if (filterParameters[filterField].length === 0) {
-            delete filterParameters[filterField];
-          }
-        }
+        filterParameters[filterField] = choosenValue.split();
+      }
+    } else {
+      // чек убран - удаляем элемент массива, если он был единственный - удаляем свойство объекта
+      filterParameters[filterField].splice(filterParameters[filterField].indexOf(choosenValue), 1);
+      if (filterParameters[filterField].length === 0) {
+        delete filterParameters[filterField];
       }
     }
   };
 
 
-  var onFilterChange = function (evt) {
-    window.debounce(function () {
-      var filterField = filterElementIdToDataField[evt.target.id];
-      var choosenValue = evt.target.value;
-      var checkValue = evt.target.checked;
+  var updatefilterParameters = function (evt) {
+    var filterField = filterElementIdToDataField[evt.target.id];
+    var choosenValue = evt.target.value;
+    var changedTag = getChangedTagInfo(evt);
 
-      updatefilterParameters(filterField, choosenValue, checkValue);
-      window.card.hide();
-      filterData(null, window.map.renderMapPins);
-    })();
+    if (changedTag.tagName === FilteredTagName.SELECT) {
+      updatefilterParametersFromSelectTag(filterField, choosenValue);
+    } else if (changedTag.tagName === FilteredTagName.INPUT && changedTag.type === FilteredTagType.CHECKBOX) {
+      var shouldAdd = evt.target.checked;
+      updatefilterParametersFromCheckbox(filterField, choosenValue, shouldAdd);
+    }
+  };
+
+
+  var onFilterChange = function (evt) {
+    // window.debounce(function () {
+    updatefilterParameters(evt);
+    window.card.hide();
+    filterData(null, window.map.renderMapPins);
+    // })();
   };
 
 
