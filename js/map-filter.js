@@ -16,7 +16,7 @@
     'filter-conditioner': 'features'
   };
 
-  var ALL_VALUES = 'any';
+  var ANY_VALUE = 'any';
 
   var stringToNumberPrice = {
     'low':
@@ -72,7 +72,7 @@
 
 
   var updatefilterParameters = function (filterField, choosenValue, checkValue) {
-    if (choosenValue === ALL_VALUES) {
+    if (choosenValue === ANY_VALUE) {
       delete filterParameters[filterField];
     } else {
       var formattedValue = formatChoosenValue(filterField, choosenValue);
@@ -81,7 +81,7 @@
         filterParameters[filterField] = formattedValue;
       } else {
         // Массив. Если нужно добавить элемент массива (checkValue = true), проверяем есть ли свойство,
-        // если есть - concat, если нет - присваиваем
+        // если есть - добавляем, если нет - присваиваем
         if (checkValue) {
           if (filterParameters.hasOwnProperty(filterField)) {
             filterParameters[filterField].push(formattedValue);
@@ -113,7 +113,7 @@
   };
 
 
-  var getFilterPass = function (elementData) {
+  var isFilterPassed = function (elementData) {
     for (var filterParameter in filterParameters) {
       // проверка спец-свойств из словаря specialFieldToCheckPassFunction (цена и фичи в нашем случае).
       // Если в словаре спецсвойств существует свойство из filterParameters, проверяем функцией из словаря
@@ -140,11 +140,7 @@
       data = serverData;
     }
 
-    if (!window.util.isEmpty(filterParameters)) {
-      filteredData = data.filter(getFilterPass);
-    } else {
-      filteredData = data.slice();
-    }
+    filteredData = (window.util.isEmpty(filterParameters)) ? data.slice() : data.filter(isFilterPassed);
 
     callback(filteredData);
   };
@@ -156,13 +152,18 @@
   };
 
 
+  var clearState = function () {
+    data = [];
+    filteredData = [];
+    filterParameters = {};
+  };
+
+
   var deactivateFilter = function () {
     window.util.changeCollectionAttribute(filterFormElement.children, 'disabled', true);
     filterFormElement.removeEventListener('change', onFilterChange);
     filterFormElement.reset();
-    data = [];
-    filteredData = [];
-    filterParameters = {};
+    clearState();
   };
 
 
