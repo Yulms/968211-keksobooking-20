@@ -4,7 +4,7 @@
   var activatePage = function () {
     window.map.activate();
     window.form.activate();
-    console.clear();
+    // console.clear();
   };
 
   var deactivatePage = function () {

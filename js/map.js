@@ -104,7 +104,6 @@
     });
 
     mapElement.classList.remove('map--faded');
-    window.mapFilter.activate();
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
