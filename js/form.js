@@ -10,6 +10,8 @@
   var priceInputElement = addOfferFormElement.querySelector('#price');
   var offerCheckInInputElement = addOfferFormElement.querySelector('#timein');
   var offerCheckOutInputElement = addOfferFormElement.querySelector('#timeout');
+  var avatarInputElement = addOfferFormElement.querySelector('#avatar');
+  var avatarImageElement = addOfferFormElement.querySelector('#avatar-image');
 
 
   var fillAdressInput = function (location) {
@@ -123,6 +125,8 @@
     addOfferFormElement.addEventListener('reset', onFormReset);
     fillActiveFormAddressInput();
     setPriceElementAttribures();
+
+    window.imageInjection.activate(avatarInputElement, avatarImageElement);
   };
 
   var deactivateForm = function () {
@@ -137,6 +141,8 @@
     addOfferFormElement.removeEventListener('submit', onFormSubmit);
     addOfferFormElement.removeEventListener('reset', onFormReset);
     fillNotActiveFormAddressInput();
+
+    window.imageInjection.deactivate();
   };
 
   var resetForm = function () {
