@@ -77,7 +77,7 @@
   };
 
 
-  var updateFilterParametersByControlType = {
+  var initializeFilterParametersByControlType = {
     SELECT: function (elem, dataFieldName) {
       filterParameters[dataFieldName] = (elem.value === ANY_VALUE) ? null : elem.value;
     },
@@ -99,7 +99,7 @@
         var selectElements = filterFormElement.querySelectorAll(filteredControlTypeSelector[control]);
         selectElements.forEach(function (elem) {
           var dataFieldName = filterElementIdToDataField[elem.id];
-          updateFilterParametersByControlType[control](elem, dataFieldName);
+          initializeFilterParametersByControlType[control](elem, dataFieldName);
         });
       }
     }
