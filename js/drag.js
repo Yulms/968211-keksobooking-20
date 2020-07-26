@@ -3,18 +3,18 @@
 window.drag = (function () {
   return function () {
 
-    var MAX_DRAG_DEFAULT_LIMIT = {
-      top: -10000,
-      right: 10000,
-      bottom: 10000,
-      left: -10000,
+    var MaxDragDefaultLimit = {
+      TOP: -10000,
+      RIGHT: 10000,
+      BOTTOM: 10000,
+      LEFT: -10000,
     };
 
     var dragLimit = {
-      top: MAX_DRAG_DEFAULT_LIMIT.top,
-      right: MAX_DRAG_DEFAULT_LIMIT.right,
-      bottom: MAX_DRAG_DEFAULT_LIMIT.bottom,
-      left: MAX_DRAG_DEFAULT_LIMIT.left
+      top: MaxDragDefaultLimit.TOP,
+      right: MaxDragDefaultLimit.RIGHT,
+      bottom: MaxDragDefaultLimit.BOTTOM,
+      left: MaxDragDefaultLimit.LEFT
     };
 
     var handleElement;
@@ -102,12 +102,15 @@ window.drag = (function () {
     };
 
     var deactivate = function () {
+      if (handleElement) {
+        handleElement.removeEventListener('mousedown', onHandleMouseDown);
+      }
+    };
+
+    var centerDraggedElement = function () {
       if (draggedElement) {
         draggedElement.style.left = startPosition.left;
         draggedElement.style.top = startPosition.top;
-      }
-      if (handleElement) {
-        handleElement.removeEventListener('mousedown', onHandleMouseDown);
       }
     };
 
@@ -123,7 +126,8 @@ window.drag = (function () {
     return {
       activate: activate,
       deactivate: deactivate,
-      setDragLimit: setDragLimit
+      setDragLimit: setDragLimit,
+      centerDraggedElement: centerDraggedElement
     };
   };
 })();

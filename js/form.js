@@ -95,7 +95,7 @@
   var onFormReset = function () {
     offerTypeInputElement.value = offerTypeInputElementDefaultValue;
     setPriceElementAttribures();
-    window.main.deactivatePage();
+    setTimeout(window.main.deactivatePage, 0);
   };
 
   var synchronizeTimeElements = function (baseElement, syncronizedElement) {

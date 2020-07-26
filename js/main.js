@@ -18,5 +18,6 @@
   };
 
   deactivatePage();
+  window.map.activateMainPinDrag();
 
 })();
