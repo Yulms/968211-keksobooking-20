@@ -1,7 +1,6 @@
 'use strict';
 
 window.drag = (function () {
-  // хак для работы замыканий на случай нескольких экземпляров работающих модулей
   return function () {
 
     var MAX_DRAG_DEFAULT_LIMIT = {

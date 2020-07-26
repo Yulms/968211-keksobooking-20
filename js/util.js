@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var KeyCodes = {
+  var KeyCode = {
     ENTER: 13,
     ESCAPE: 27
   };
@@ -59,13 +59,13 @@
   };
 
   var isEscapePressEvent = function (evt, callback) {
-    if (evt.keyCode === KeyCodes.ESCAPE) {
+    if (evt.keyCode === KeyCode.ESCAPE) {
       callback();
     }
   };
 
   var isEnterPressEvent = function (evt, callback) {
-    if (evt.keyCode === KeyCodes.ENTER) {
+    if (evt.keyCode === KeyCode.ENTER) {
       callback();
     }
   };
