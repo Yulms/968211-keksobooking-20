@@ -92,7 +92,6 @@
   };
 
 
-  // динамическое формирование filterParameters по разметке при активации фильтра
   var initializeFilterParameters = function () {
     for (var control in filteredControlTypeSelector) {
       if (filteredControlTypeSelector.hasOwnProperty(control)) {
