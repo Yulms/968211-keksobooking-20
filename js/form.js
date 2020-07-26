@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+
+
   var addOfferFormElement = document.querySelector('.ad-form');
   var addressInputElement = addOfferFormElement.querySelector('#address');
   var roomsNumberElement = addOfferFormElement.querySelector('#room_number');
@@ -10,6 +12,8 @@
   var priceInputElement = addOfferFormElement.querySelector('#price');
   var offerCheckInInputElement = addOfferFormElement.querySelector('#timein');
   var offerCheckOutInputElement = addOfferFormElement.querySelector('#timeout');
+
+  var DEFAULT_PRICE_VALUE = priceInputElement.placeholder || 5000;
 
 
   var fillAdressInput = function (location) {
@@ -90,7 +94,7 @@
 
   var onFormReset = function () {
     offerTypeInputElement.value = offerTypeInputElementDefaultValue;
-    validateMinPrice();
+    priceInputElement.placeholder = DEFAULT_PRICE_VALUE;
     window.main.deactivatePage();
   };
 
