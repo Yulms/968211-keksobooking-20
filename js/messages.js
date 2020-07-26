@@ -1,8 +1,7 @@
 'use strict';
 
 (function () {
-
-  var MessageTypes = {
+  var MessageType = {
     SUCCESS: 'success',
     ERROR: 'error',
   };
@@ -28,7 +27,7 @@
   var addHandlers = function (messageType) {
     document.addEventListener('keydown', onDocumentEscPress);
     openedMessageElement.addEventListener('click', onMessageClick);
-    if (messageType === MessageTypes.ERROR) {
+    if (messageType === MessageType.ERROR) {
       openedMessageElement.querySelector('.error__button').addEventListener('click', closeMessage);
     }
   };
@@ -39,17 +38,17 @@
 
   var showMessage = function (messageType, text) {
     switch (messageType) {
-      case MessageTypes.SUCCESS:
+      case MessageType.SUCCESS:
         openedMessageElement = successTemplate.cloneNode(true);
-        addHandlers(MessageTypes.SUCCESS);
+        addHandlers(MessageType.SUCCESS);
         break;
 
-      case MessageTypes.ERROR:
+      case MessageType.ERROR:
         openedMessageElement = errorTemplate.cloneNode(true);
         if (text) {
           openedMessageElement.querySelector('.error__message').textContent = text;
         }
-        addHandlers(MessageTypes.ERROR);
+        addHandlers(MessageType.ERROR);
         break;
     }
 
@@ -57,11 +56,11 @@
   };
 
   var showSuccess = function () {
-    showMessage(MessageTypes.SUCCESS);
+    showMessage(MessageType.SUCCESS);
   };
 
   var showError = function () {
-    showMessage(MessageTypes.ERROR);
+    showMessage(MessageType.ERROR);
   };
 
 

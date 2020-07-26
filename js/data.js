@@ -1,7 +1,12 @@
 'use strict';
 
 (function () {
-  var OFFER_TYPES = [
+  var TYPE_PROPERTY_NAME = 'type';
+  var MIN_PRICE_PROPERTY_NAME = 'minPrice';
+  var TYPE_IN_RUSSIAN_NAME = 'typeInRussian';
+  var PRICE_UNIT = '₽/ночь';
+
+  var OfferTypes = [
     {
       type: 'palace',
       typeInRussian: 'Дворец',
@@ -23,7 +28,7 @@
       minPrice: 0
     },
   ];
-  var ROOMS = [
+  var Rooms = [
     {
       quantity: 1,
       minGuests: 1,
@@ -46,10 +51,6 @@
       wrongCapacityMessage: '100 комнат — «не для гостей»'
     }
   ];
-  var TYPE_PROPERTY_NAME = 'type';
-  var MIN_PRICE_PROPERTY_NAME = 'minPrice';
-  var TYPE_IN_RUSSIAN_NAME = 'typeInRussian';
-  var PRICE_UNIT = '₽/ночь';
 
   var similarOffers = [];
 
@@ -77,7 +78,7 @@
 
   var getOfferTypeInRussian = function (offerTypeInEnglish) {
     return window.util.findArrayOfObjectsValue(
-        OFFER_TYPES,
+        OfferTypes,
         TYPE_PROPERTY_NAME,
         offerTypeInEnglish,
         TYPE_IN_RUSSIAN_NAME
@@ -86,7 +87,7 @@
 
   var getMinPrice = function (offerType) {
     return window.util.findArrayOfObjectsValue(
-        OFFER_TYPES,
+        OfferTypes,
         TYPE_PROPERTY_NAME,
         offerType,
         MIN_PRICE_PROPERTY_NAME);
@@ -99,7 +100,7 @@
     getOfferTypeInRussian: getOfferTypeInRussian,
     getMinPrice: getMinPrice,
     PRICE_UNIT: PRICE_UNIT,
-    ROOMS: ROOMS
+    Rooms: Rooms
   };
 
 })();

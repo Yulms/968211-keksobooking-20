@@ -4,9 +4,10 @@
   var MAX_PINS_NUMBER = 5;
   var MAIN_PIN_EXTRA_OFFSET_X = 0;
   var MAIN_PIN_EXTRA_OFFSET_Y = 22;
-  var DRAG_LIMIT_VERTICAL = {
-    top: 130,
-    bottom: 630
+
+  var VerticalDragLimit = {
+    TOP: 130,
+    BOTTOM: 630
   };
 
 
@@ -107,11 +108,13 @@
     mapPinMainElement.removeEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.removeEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.addEventListener('click', onPinClick);
+  };
 
+  var activateMainPinDrag = function () {
     var dragLimits = {
-      top: DRAG_LIMIT_VERTICAL.top - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+      top: VerticalDragLimit.TOP - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
       right: mapPinMainElement.offsetParent.offsetWidth - mapPinMainElement.offsetWidth / 2,
-      bottom: DRAG_LIMIT_VERTICAL.bottom - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
+      bottom: VerticalDragLimit.BOTTOM - mapPinMainElement.offsetHeight - MAIN_PIN_EXTRA_OFFSET_Y,
       left: -mapPinMainElement.offsetWidth / 2
     };
     mainPinDrag.setDragLimit(dragLimits);
@@ -126,12 +129,13 @@
     mapPinMainElement.addEventListener('mousedown', onMapPinMainElementMousedown);
     mapPinMainElement.addEventListener('keydown', onMapPinMainElementPressEnter);
     pinDestinationElement.removeEventListener('click', onPinClick);
-    mainPinDrag.deactivate();
+    mainPinDrag.centerDraggedElement();
   };
 
 
   window.map = {
     activate: activateMap,
+    activateMainPinDrag: activateMainPinDrag,
     deactivate: deactivateMap,
     getMainPinVerticalCenterLocation: makeElementLocationCallback(mapPinMainElement, false),
     getMainPinVerticalBottomLocation: makeElementLocationCallback(

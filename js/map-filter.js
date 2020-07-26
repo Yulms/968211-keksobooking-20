@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ANY_VALUE = 'any';
+
   var filterFormElement = document.querySelector('.map__filters');
 
   var filterElementIdToDataField = {
@@ -15,8 +17,6 @@
     'filter-elevator': 'features',
     'filter-conditioner': 'features'
   };
-
-  var ANY_VALUE = 'any';
 
   var stringToNumberPrice = {
     'low':

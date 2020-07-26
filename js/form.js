@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-
-
   var addOfferFormElement = document.querySelector('.ad-form');
   var addressInputElement = addOfferFormElement.querySelector('#address');
   var roomsNumberElement = addOfferFormElement.querySelector('#room_number');
@@ -12,8 +10,8 @@
   var priceInputElement = addOfferFormElement.querySelector('#price');
   var offerCheckInInputElement = addOfferFormElement.querySelector('#timein');
   var offerCheckOutInputElement = addOfferFormElement.querySelector('#timeout');
-
-  var DEFAULT_PRICE_VALUE = priceInputElement.placeholder || 5000;
+  var avatarInputElement = addOfferFormElement.querySelector('#avatar');
+  var avatarImageElement = addOfferFormElement.querySelector('#avatar-image');
 
 
   var fillAdressInput = function (location) {
@@ -29,15 +27,15 @@
   };
 
   var validateRoomToCapacity = function () {
-    var ROOMS = window.data.ROOMS;
+    var rooms = window.data.Rooms;
     var selectedRooms = parseInt(roomsNumberElement.value, 10);
     var selectedCapacity = parseInt(roomCapacityElement.value, 10);
 
     roomCapacityElement.setCustomValidity('');
-    for (var i = 0; i < ROOMS.length; i++) {
-      if (ROOMS[i].quantity === selectedRooms) {
-        if (selectedCapacity < ROOMS[i].minGuests || selectedCapacity > ROOMS[i].maxGuests) {
-          roomCapacityElement.setCustomValidity(ROOMS[i].wrongCapacityMessage);
+    for (var i = 0; i < rooms.length; i++) {
+      if (rooms[i].quantity === selectedRooms) {
+        if (selectedCapacity < rooms[i].minGuests || selectedCapacity > rooms[i].maxGuests) {
+          roomCapacityElement.setCustomValidity(rooms[i].wrongCapacityMessage);
           break;
         }
       }
@@ -55,22 +53,26 @@
     validateRoomToCapacity();
   };
 
-  var validateMinPrice = function () {
+  var setPriceElementAttribures = function () {
     var minPrice = window.data.getMinPrice(offerTypeInputElement.value);
 
     priceInputElement.min = minPrice;
     priceInputElement.placeholder = minPrice;
+  };
+
+  var validatePriceElement = function () {
     if (Number(priceInputElement.value)) {
       priceInputElement.reportValidity();
     }
   };
 
   var onOfferTypeElementChange = function () {
-    validateMinPrice();
+    setPriceElementAttribures();
+    validatePriceElement();
   };
 
   var onPriceElementChange = function () {
-    validateMinPrice();
+    setPriceElementAttribures();
   };
 
   var onFormSubmit = function (evt) {
@@ -94,8 +96,8 @@
 
   var onFormReset = function () {
     offerTypeInputElement.value = offerTypeInputElementDefaultValue;
-    priceInputElement.placeholder = DEFAULT_PRICE_VALUE;
-    window.main.deactivatePage();
+    setPriceElementAttribures();
+    setTimeout(window.main.deactivatePage, 0);
   };
 
   var synchronizeTimeElements = function (baseElement, syncronizedElement) {
@@ -122,6 +124,9 @@
     addOfferFormElement.addEventListener('submit', onFormSubmit);
     addOfferFormElement.addEventListener('reset', onFormReset);
     fillActiveFormAddressInput();
+    setPriceElementAttribures();
+
+    window.imageInjection.activate(avatarInputElement, avatarImageElement);
   };
 
   var deactivateForm = function () {
@@ -136,6 +141,8 @@
     addOfferFormElement.removeEventListener('submit', onFormSubmit);
     addOfferFormElement.removeEventListener('reset', onFormReset);
     fillNotActiveFormAddressInput();
+
+    window.imageInjection.deactivate();
   };
 
   var resetForm = function () {
