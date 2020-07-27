@@ -27,25 +27,6 @@
     return filteredArray[0][returnKeyName];
   };
 
-  // поиск в массиве объектов до первого соответствия. Возвращает объект
-  var findArrayOfObjectsObject = function (arr, keyName, keyValue) {
-    debugger;
-    var resultValue;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i][keyName] === keyValue) {
-        resultValue = arr[i];
-        break;
-      }
-    }
-    // debugger;
-    // var filteredArray = arr.filter(function (elem) {
-    //   return elem[keyName] === keyValue;
-    // });
-
-    // return filteredArray[0];
-    return resultValue;
-  };
-
   var isEscapePressEvent = function (evt, callback) {
     if (evt.keyCode === KeyCode.ESCAPE) {
       callback();
@@ -77,7 +58,6 @@
     getRandomInteger: getRandomInteger,
     changeCollectionAttribute: changeCollectionAttribute,
     findArrayOfObjectsValue: findArrayOfObjectsValue,
-    findArrayOfObjectsObject: findArrayOfObjectsObject,
     isEscapePressEvent: isEscapePressEvent,
     isEnterPressEvent: isEnterPressEvent,
     isLeftButtonMouseDown: isLeftButtonMouseDown,
