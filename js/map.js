@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var MAX_PINS_NUMBER = 5;
   var MAIN_PIN_EXTRA_OFFSET_X = 0;
   var MAIN_PIN_EXTRA_OFFSET_Y = 22;
 
@@ -31,15 +30,12 @@
 
   var getSimilarOfferPinsFragment = function (data) {
     var fragment = document.createDocumentFragment();
-    var addedPins = 0;
 
+    // здесь мне нужно передать index другой ф-ции поэтому for
     for (var i = 0; i < data.length; i++) {
-      if (addedPins < MAX_PINS_NUMBER && data[i].offer) {
+      if (data[i].offer) {
         var offer = createSimilarOfferPinElement(data[i], i);
         fragment.append(offer);
-        addedPins++;
-      } else {
-        break;
       }
     }
 

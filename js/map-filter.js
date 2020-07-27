@@ -2,6 +2,7 @@
 
 (function () {
   var ANY_VALUE = 'any';
+  var MAX_QUANTITY = 5;
 
   var filterFormElement = document.querySelector('.map__filters');
 
@@ -190,8 +191,8 @@
       data = serverData;
     }
 
-    filteredData = (window.util.isEmpty(filterParameters)) ? data.slice() : data.filter(isFilterPassed);
-
+    var filteredDataFull = (window.util.isEmpty(filterParameters)) ? data.slice() : data.filter(isFilterPassed);
+    filteredData = filteredDataFull.slice(0, MAX_QUANTITY);
     callback(filteredData);
   };
 

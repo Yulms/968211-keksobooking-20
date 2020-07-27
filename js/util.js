@@ -11,24 +11,8 @@
     return Math.floor(randomNumber);
   };
 
-  var getRandomArrayValue = function (arr) {
-    return arr[getRandomInteger(0, arr.length - 1)];
-  };
-
-  var getRandomArray = function (arr) {
-    var resultArray = [];
-    for (var i = 0; i < arr.length; i++) {
-      if (Math.random() >= 0.5) {
-        resultArray.push(arr[i]);
-      }
-    }
-    if (resultArray.length === 0) {
-      resultArray = null;
-    }
-    return resultArray;
-  };
-
   var changeCollectionAttribute = function (collection, attrName, attrValue) {
+    // функция работает также с nodeList, поэтому forEach не применял
     for (var i = 0; i < collection.length; i++) {
       collection[i][attrName] = attrValue;
     }
@@ -36,18 +20,16 @@
 
   // поиск в массиве объектов до первого соответствия
   var findArrayOfObjectsValue = function (arr, keyName, keyValue, returnKeyName) {
-    var resultValue;
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i][keyName] === keyValue) {
-        resultValue = arr[i][returnKeyName];
-        break;
-      }
-    }
-    return resultValue;
+    var filteredArray = arr.filter(function (elem) {
+      return elem[keyName] === keyValue;
+    });
+
+    return filteredArray[0][returnKeyName];
   };
 
   // поиск в массиве объектов до первого соответствия. Возвращает объект
   var findArrayOfObjectsObject = function (arr, keyName, keyValue) {
+    debugger;
     var resultValue;
     for (var i = 0; i < arr.length; i++) {
       if (arr[i][keyName] === keyValue) {
@@ -55,6 +37,12 @@
         break;
       }
     }
+    // debugger;
+    // var filteredArray = arr.filter(function (elem) {
+    //   return elem[keyName] === keyValue;
+    // });
+
+    // return filteredArray[0];
     return resultValue;
   };
 
@@ -87,8 +75,6 @@
 
   window.util = {
     getRandomInteger: getRandomInteger,
-    getRandomArrayValue: getRandomArrayValue,
-    getRandomArray: getRandomArray,
     changeCollectionAttribute: changeCollectionAttribute,
     findArrayOfObjectsValue: findArrayOfObjectsValue,
     findArrayOfObjectsObject: findArrayOfObjectsObject,

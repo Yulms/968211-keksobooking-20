@@ -1,54 +1,84 @@
 'use strict';
 
-(function () {
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var imageInput;
-  var imageElement;
-  var imageElementDefaultSource;
+window.imageInjection = (function () {
 
-  var onInputChange = function () {
-    var file = imageInput.files[0];
-    var fileName = file.name.toLowerCase();
+  return function () {
 
-    var matches = FILE_TYPES.some(function (elem) {
-      return fileName.endsWith(elem);
-    });
+    var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+    var imageInput;
+    var imageElement;
+    var imageElementDefaultSource;
+    var imageParentElement;
+    var addedImage;
 
-    if (matches) {
-      var reader = new FileReader();
 
-      reader.addEventListener('load', function () {
-        imageElementDefaultSource = imageElement.src;
-        imageElement.src = reader.result;
+    var onInputChange = function () {
+      var file = imageInput.files[0];
+      var fileName = file.name.toLowerCase();
+
+      var matches = FILE_TYPES.some(function (elem) {
+        return fileName.endsWith(elem);
       });
 
-      reader.readAsDataURL(file);
-    }
-  };
+      if (matches) {
+        var reader = new FileReader();
+
+        reader.addEventListener('load', function () {
+          if (!imageParentElement) {
+            imageElement.src = reader.result;
+          } else {
+            if (addedImage) {
+              addedImage.src = reader.result;
+            } else {
+              addedImage = document.createElement('img');
+              addedImage.style.maxWidth = '100%';
+              addedImage.style.maxHeight = '100%';
+              addedImage.src = reader.result;
+              imageParentElement.append(addedImage);
+            }
+          }
+        });
+
+        reader.readAsDataURL(file);
+      }
+    };
 
 
-  var activate = function (imageFileInput, imageElem) {
-    imageInput = imageFileInput;
-    imageElement = imageElem;
-    imageInput.addEventListener('change', onInputChange);
-  };
+    var activate = function (imageFileInput, imageElem, imageParent) {
+      imageInput = imageFileInput;
+      if (imageElem) {
+        imageElement = imageElem;
+        imageElementDefaultSource = imageElement.src;
+      }
+      imageParentElement = imageParent;
 
-  var deactivate = function () {
-    if (imageInput) {
-      imageInput.removeEventListener('change', onInputChange);
-      resetImageElement();
-    }
-  };
-
-  var resetImageElement = function () {
-    imageElement.src = imageElementDefaultSource;
-  };
+      imageInput.addEventListener('change', onInputChange);
+    };
 
 
-  window.imageInjection = {
-    activate: activate,
-    deactivate: deactivate,
-    resetImageElement: resetImageElement
+    var deactivate = function () {
+      if (imageInput) {
+        imageInput.removeEventListener('change', onInputChange);
+        resetImageElement();
+      }
+    };
+
+
+    var resetImageElement = function () {
+      if (imageElementDefaultSource) {
+        imageElement.src = imageElementDefaultSource;
+      }
+      if (addedImage) {
+        imageParentElement.innerHTML = '';
+      }
+    };
+
+
+    return {
+      activate: activate,
+      deactivate: deactivate,
+      resetImageElement: resetImageElement
+    };
   };
 
 })();

@@ -12,6 +12,11 @@
   var offerCheckOutInputElement = addOfferFormElement.querySelector('#timeout');
   var avatarInputElement = addOfferFormElement.querySelector('#avatar');
   var avatarImageElement = addOfferFormElement.querySelector('#avatar-image');
+  var offerPhotoInputElement = addOfferFormElement.querySelector('#images');
+  var parentOfferImageElement = addOfferFormElement.querySelector('.ad-form__photo');
+
+  var avatarInjector = window.imageInjection();
+  var offerPhotoInjector = window.imageInjection();
 
 
   var fillAdressInput = function (location) {
@@ -32,14 +37,16 @@
     var selectedCapacity = parseInt(roomCapacityElement.value, 10);
 
     roomCapacityElement.setCustomValidity('');
-    for (var i = 0; i < rooms.length; i++) {
-      if (rooms[i].quantity === selectedRooms) {
-        if (selectedCapacity < rooms[i].minGuests || selectedCapacity > rooms[i].maxGuests) {
-          roomCapacityElement.setCustomValidity(rooms[i].wrongCapacityMessage);
-          break;
-        }
-      }
+
+    var wrongRoomSelectionData = rooms.filter(function (room) {
+      return (room.quantity === selectedRooms) &&
+        (selectedCapacity < room.minGuests || selectedCapacity > room.maxGuests);
+    });
+
+    if (Array.isArray(wrongRoomSelectionData) && wrongRoomSelectionData.length > 0) {
+      roomCapacityElement.setCustomValidity(wrongRoomSelectionData[0].wrongCapacityMessage);
     }
+
     roomCapacityElement.reportValidity();
 
     return roomCapacityElement.checkValidity();
@@ -126,7 +133,8 @@
     fillActiveFormAddressInput();
     setPriceElementAttribures();
 
-    window.imageInjection.activate(avatarInputElement, avatarImageElement);
+    avatarInjector.activate(avatarInputElement, avatarImageElement);
+    offerPhotoInjector.activate(offerPhotoInputElement, null, parentOfferImageElement);
   };
 
   var deactivateForm = function () {
@@ -142,7 +150,8 @@
     addOfferFormElement.removeEventListener('reset', onFormReset);
     fillNotActiveFormAddressInput();
 
-    window.imageInjection.deactivate();
+    avatarInjector.deactivate();
+    offerPhotoInjector.deactivate();
   };
 
   var resetForm = function () {
